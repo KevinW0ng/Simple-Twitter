@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<html>
+  <head>
+    <title>Main Page</title>
+
+  </head>
+  <body>
+    <div class="layer">
+    <div class="main-page">
+      <!-- First part: function list -->
+      
+      <div class="function-list">
+        <ul>
+          <li>
+            <img src="/img/Twitter-icon.svg">
+            <h2>Welcome <%= currentUser.username %>!</h2>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/house-door.svg">
+              <a href="main">Home</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/sticky.svg">
+              <a href="create">New Post</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/person-circle.svg">
+              <a href="profile">Profile</a>
+          </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/search-heart.svg">
+              <a href="ForUser">Discover</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/box-arrow-left.svg">
+              <a href="logout">Log out</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Second part: user posts -->
+      <div class="head">
+      <h2 id="post-head">Home</h2>
+    </div>
+      <div class="posts">
+        <% for (const post of posts) { %>
+          <div class="post">
+            <h3><%= post.title %></h3>
+            <p>@<%= post.username %></p>
+            <p><%= post.body %></p>
+            <% if (post.image) { %>
+              <% const base64Data = post.image.toString('base64'); %>
+              <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
+            <% } %><br>
+            <p>Like: <%= post.likeCount %></p>
+            <div class="interaction-buttons">
+              <div class="like">
+                <form method="POST" action="/like/<%= post._id %>">
+                  <button type="submit"><img src="/img/heart.svg"></button>
+                </form>
+              </div>
+              <div class="dislike">
+                <form method="POST" action="/dislike/<%= post._id %>">
+                  <button type="submit"><img src="/img/heartbreak.svg"></button>
+                </form>
+              </div>
+              <div class="reply">
+                  <button><img src="/img/chat-square-text.svg"></button>
+              </div>
+              <div class="retweet">
+                <form method="POST" action="/retweet">
+                  <input type="hidden" name="postId" value="<%= post._id %>">
+                  <button type="submit"><img src="/img/send.svg"></button>
+                </form>
+              </div>
+            </div>
+            
+            <div class="comments">
+              <h4>Comments:</h4>
+              <% if (post.comments && post.comments.length > 0) { %>
+                <% for (const comment of post.comments) { %>
+                  <div class="comment">
+                    <p><%= comment.username %>: <%= comment.content %></p>
+                  </div>
+                <% } %>
+              <% } else { %>
+                <p>No comments yet.</p>
+              <% } %>
+            </div>
+            
+            <form id="comment-form" action="/comment/<%= post._id %>" method="POST">
+              <input type="text" name="comment" placeholder="Add a comment">
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+      
+          <!-- Display the reposted posts -->
+          <% for (const repost of freposts) { %>
+
+              <div class="post frerepost">
+                <h3><%= repost.title %></h3>
+                <p>Reposted by <%= repost.author %> ,@<%= post.username %></p>
+                <p><%= repost.body %></p>
+                <% if (repost.image) { %>
+                  <% const base64Data = repost.image.toString('base64'); %>
+                  <img src="data:image/png;base64,<%= base64Data %>" alt="Repost image">
+                <% } %>
+                <p>Like Count: <%= repost.likeCount %></p>
+                <div class="interaction-buttons">
+                  <form method="POST" action="/like/<%= repost._id %>">
+                    <button type="submit"><img src="/img/heart.svg"></button>
+                  </form>
+                  <form method="POST" action="/dislike/<%= repost._id %>">
+                    <button type="submit"><img src="/img/heartbreak.svg"></button>
+                  </form>
+                  <div class="reply">
+                    <button><img src="/img/chat-square-text.svg"></button>
+                  </div>
+                  <div class="retweet">
+                    <form method="POST" action="/retweet">
+                      <input type="hidden" name="postId" value="<%= repost._id %>">
+                      <button type="submit"><img src="/img/send.svg"></button>
+                    </form>
+                  </div>
+                </div>
+      
+                <div class="comments">
+                  <h4>Comments:</h4>
+                  <% if (repost.comments && repost.comments.length > 0) { %>
+                    <% for (const comment of repost.comments) { %>
+                      <div class="comment">
+                        <p><%= comment.username %>: <%= comment.content %></p>
+                      </div>
+                    <% } %>
+                  <% } else { %>
+                    <p>No comments yet.</p>
+                  <% } %>
+                </div>
+      
+                <form id="comment-form" action="/comment/<%= post._id %>" method="POST">
+                  <input type="text" name="comment" placeholder="Add a comment">
+                  <button type="submit">Submit</button>
+                </form>
+      
+          </div>
+          <% } %>
+        <% } %>
+      </div>
+      
+
+
+
+<!-- Third part: search users -->
+<div class="search-users">
+  <form method="GET" action="/main" id="search-bar">
+    <div>
+      <input type="text" placeholder="Search..." name="q">
+      <button type="submit">Go</button>
+    </div>
+  </form>
+  <% if (users && users.length > 0) { %>
+    <h3>Search Results:</h3>
+    <div class="result">
+    <ul>
+      <% users.forEach(function(user) { %>
+        <li>
+          <p><%= user.username %></p>
+          
+          <form method="POST" action="/follow">
+            <input type="hidden" name="username" value="<%= user.username %>">
+            <% if (currentUser.username !== user.username) { %>
+              <% if (currentUser.following?.includes(user.username)) { %>
+                <button disabled>Following</button>
+              <% } else { %>
+                <button type="submit">Follow</button>
+              <% } %>
+            <% } %>
+          </form>
+        </li>
+      <% }); %>
+    </ul>
+  <% } else if (query) { %>
+    <p>No users found.</p>
+  <% } %>
+</div>
+</div>
+      
+
+
+    </div>
+  </div>
+  </body>
+</html>

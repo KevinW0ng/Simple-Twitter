@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/create.css">
+<html>
+  <head>
+<title>Create Post</title>
+</head>
+<body>
+  <div class="layer">
+    <div class="page-wrapper">
+    <div class="create-container">
+      <h2>What's Happening?</h2>
+      <form action="/create" method="post" enctype="multipart/form-data">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
+      <br>
+      <label for="body">Body:</label>
+      <textarea id="body" name="body" required></textarea>
+      <br>
+      <label for="photo">Photo:</label>
+      <input type="file" id="photo" name="photo">
+      <br>
+      <button type="submit">Create Post</button>
+    </form>
+
+  <div id="message">
+  <!-- Always show the "Go back to main page" link -->
+  <div>
+    <a href="/main">Go back to main page</a>
+  </div>
+  </div>
+</div>
+  </div>
+</div>
+  <script>
+    // Check if there is an error message in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
+
+    // If there is a success message, display it on the page
+    if (action === 'create_success') {
+      const messageElement = document.getElementById('message');
+      const message = '<p style="color: darkgreen;">Create success! </p> <a href="/main">Go back to main page</a>';
+      messageElement.innerHTML = message;
+    }
+  </script>
+</body>
+</html>

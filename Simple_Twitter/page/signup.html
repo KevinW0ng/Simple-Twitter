@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/signup.css">
+<html>
+  <head>
+    <title>Sign Up Page</title>
+  </head>
+  <body>
+    <div class="signup-divider">
+      <div class="word-design">
+        <img id="icon" src='/img/Twitter-Icon-big.svg' alt="icon">
+        <img id="word" src='/img/Slogan.svg' alt="word">
+      </div>
+      <div class="signup-container">
+      <form class="signup-form" action="/signup" method="POST">
+        <h2>Create Your Account !</h2>
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <label for="r_password">Re-enter Password:</label>
+        <input type="password" id="cpassword" name="cpassword">
+
+        <div class="error-message"></div>
+        <button type="submit" value="signup">Sign up</button>
+
+        <script>
+          // check if there is an error message in the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const error = urlParams.get('error');
+    
+          // if there is an error message, display it on the page
+          if (error == 1) {
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Username already exists!' + '</p>';
+          } else if (error == 2) {
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Passwords do not match!' + '</p>';
+          }
+        </script>
+
+      </form>
+      <div class="login-container">
+        <p>Already have an account? <a href="login">Log in</a></p>
+      </div>
+    </div>
+    </div>
+    </div>
+
+  </body>
+</html>
